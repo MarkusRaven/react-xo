@@ -4,7 +4,7 @@ import { Square } from 'app/pages/Square'
 import 'app/assets/styles/index.css'
 
 interface IBoardProps {
-	squares: ISquare
+	squares: ISquare[]
 	onClick: (i: number) => void
 	winner: boolean
 }
@@ -15,7 +15,7 @@ export const Board: FC<IBoardProps> = (props) => {
 	const renderSquare = (i: number) => {
 		return (
 			<Square
-				value={squares.square[i]}
+				value={squares[i]}
 				onClick={() => onClick(i)}
 				winner={!!winner}
 			/>

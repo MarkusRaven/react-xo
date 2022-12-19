@@ -1,4 +1,4 @@
-export interface ISquare {
-	square: string[] | null[]
-	[index: number]: string[] | null[]
+export type ISquare = string | null
+export interface IHistory {
+	squares: ISquare[]
 }

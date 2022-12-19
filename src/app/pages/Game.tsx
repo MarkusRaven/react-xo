@@ -1,13 +1,11 @@
 import { FC, useState } from 'react'
 import { Board } from 'app/pages/Board'
-import { ISquare } from 'common/models/common.models'
+import { IHistory, ISquare } from 'common/models/common.models'
 import 'app/assets/styles/index.css'
 
 export const Game: FC = () => {
-	const [history, setHistory] = useState<ISquare[]>([
-		{
-			square: Array(9).fill(null),
-		},
+	const [history, setHistory] = useState<IHistory[]>([
+		{ squares: Array(9).fill(null) },
 	])
 
 	const [xIsNext, setXIsNext] = useState<boolean>(true)
@@ -16,17 +14,17 @@ export const Game: FC = () => {
 	const handleClick = (i: number) => {
 		const currentHistory = history.slice(0, stepNumber + 1)
 		const current = currentHistory[currentHistory.length - 1]
-		const squares = current.square.slice()
-		if (calculateWinner({ square: squares }) || squares[i]) {
+		const squares = current.squares.slice()
+		if (calculateWinner(squares) || squares[i]) {
 			return
 		}
 		squares[i] = xIsNext ? 'X' : 'O'
-		setHistory(history.concat([{ square: squares }]))
+		setHistory(currentHistory.concat([{ squares: squares }]))
 		setXIsNext((prevState) => !prevState)
 		setStepNumber(currentHistory.length)
 	}
 
-	function calculateWinner(squares: ISquare) {
+	function calculateWinner(squares: ISquare[]) {
 		const lines = [
 			[0, 1, 2],
 			[3, 4, 5],
@@ -51,7 +49,9 @@ export const Game: FC = () => {
 	}
 
 	const current = history[stepNumber]
-	const winner = calculateWinner(current)
+	const winner = calculateWinner(current.squares)
+	const nextTurn = xIsNext ? 'X' : 'O'
+	const status = winner ? `Выиграл ${winner}` : `Следующий ход ${nextTurn}`
 
 	const jumpTo = (step: number) => {
 		setStepNumber(step)
@@ -67,18 +67,11 @@ export const Game: FC = () => {
 		)
 	})
 
-	let status
-	if (winner) {
-		status = 'Выиграл ' + winner
-	} else {
-		status = 'Следующий ход: ' + (xIsNext ? 'X' : 'O')
-	}
-
 	return (
 		<div className='game'>
 			<div className='game-board'>
 				<Board
-					squares={current}
+					squares={current.squares}
 					onClick={(i: number) => handleClick(i)}
 					winner={!!winner}
 				/>

@@ -1,8 +1,9 @@
 import { FC } from 'react'
+import { ISquare } from 'common/models/common.models'
 import 'app/assets/styles/index.css'
 
 interface ISquareProps {
-	value: string | null
+	value: ISquare
 	onClick: () => void
 	winner: boolean
 }
